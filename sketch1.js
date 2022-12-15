@@ -36,8 +36,8 @@ createCanvas(windowWidth, windowHeight);
     character = createSprite(500,height-100,30,50);
     character.addAnimation("character",characterimg);
     character.scale=0.9;
-    character.setCollider("circle",0,0,40);
-    character.debug = true;
+    // character.setCollider("circle",0,0,40);
+    // character.debug = true;
 
 // Add static
     // statict = createSprite(500,height-780,30,50);
