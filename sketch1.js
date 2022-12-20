@@ -1,41 +1,45 @@
 
 var character;
 var bg,backgroundimg,invisibleGround;
+var ground, groundImg;
 var evil, evilimg;
 var tree, group;
 var statict;
 var gameState= 1;
 var score=0;
+var touches =[];
 
 
 function preload(){
     characterimg= loadAnimation("./assets/goblin_01.png","./assets/goblin_02.png","./assets/goblin_03.png");
-    backgroundimg=loadImage("./assets/xmas_2bg.png");
+    groundImg=loadImage("./assets/flowrlargo.png");
     evilimg=loadAnimation("./assets/bear_01.png","./assets/bear_02.png","./assets/bear_03.png","./assets/bear_04.png",
     "./assets/bear_05.png","./assets/bear_06.png");
     staticimg = loadAnimation("./assets/santa_01.png","./assets/santa_02.png","./assets/santa_03.png","./assets/santa_04.png","./assets/santa_05.png")
     treeimg=loadImage("./assets/obs_tree.png")
+    backgroundimg =loadImage("./assets/sky.png");
 }
 
 function setup(){
 createCanvas(windowWidth, windowHeight);
-    
+
 //Add background object
-   bg = createSprite (width-5,height/2-30,width, height);
-   bg.addAnimation("bg",backgroundimg);
-    //bg.velocityX=1;
-    // bg.velocityX = -(2 + 1)
+    ground = createSprite(width/3,(height/3)-50,width*2, 300);
+    ground.addImage("ground",groundImg);
+    ground.scale = 1.5;
+    ground.x = 0;
+    ground.velocityX = -(6.3+score/100);
 
 // Add vilan
-    evil = createSprite(150,height-3,30,50);
+    evil = createSprite(95 ,height-5,30,50);
     evil.addAnimation("evil",evilimg)
-    evil.scale=0.3;
+    evil.scale=0.2;
     
 
 // Add character
-    character = createSprite(500,height-100,30,50);
+    character = createSprite(320,height-5,30,50);
     character.addAnimation("character",characterimg);
-    character.scale=0.9;
+    character.scale=0.7;
     // character.setCollider("circle",0,0,40);
     // character.debug = true;
 
@@ -47,7 +51,7 @@ createCanvas(windowWidth, windowHeight);
 
 //Add invisible ground
 //invisibleGround = createSprite(600,460,600,590);
-    invisibleGround = createSprite(50,height-3,width,10);
+    invisibleGround = createSprite(0,height-3,width,10);
     invisibleGround.visible = false;
 
     group = new Group();
@@ -56,27 +60,26 @@ createCanvas(windowWidth, windowHeight);
 }
 
 function draw(){
-   background(0);
+   background(backgroundimg);
    // print(character.x)
    // print(character.y)
-   
-   
-   
+
     if (gameState === 1){
         //puntuacion
         
         score = score + Math.round(getFrameRate()/60);
         
         //moving background
-        bg.velocityX = -(6.3+score/100);
-        if (bg.x <= 200){
-            bg.x = width-300;
+        ground.velocityX = -(6.3+score/100);
+        if (ground.x <= 200){
+            ground.x = width-300;
         }
 
      //move character 
-        if(keyDown("space") && character.y>=height-300){
+        if((keyDown("space") || touches.length>0) && character.y>=height-300){
             character.velocityY=-14;
             evil.y = character.y;
+            touches=[]
         }
 
      // add gravity to character+ground
@@ -113,11 +116,11 @@ function draw(){
 
  function obstacles(){
     if (frameCount % 60 === 0){
-        var obstacle = createSprite(width+100,height-100);
+        var obstacle = createSprite(width+100,height-40);
         obstacle.x = Math.round(random(width+100, width+150));
         obstacle.velocityX = -(6.3+3*score/100);
         obstacle.addImage(treeimg);
-        obstacle.scale = 0.2;
+        obstacle.scale = 0.15;
         obstacle.lifetime = (width/2);
 
         group.add(obstacle)
